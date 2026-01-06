@@ -1,65 +1,48 @@
-/* =========================
-   CONNECT TO CHAT SERVER
-========================= */
-const socket = io("https://zion-backend.onrender.com");
-
-/* =========================
-   BUTTON NAVIGATION
-========================= */
-document.querySelectorAll('.buttons a').forEach(btn => {
-    btn.addEventListener('click', e => {
+/* ===== NAVIGATION ===== */
+document.querySelectorAll(".buttons a").forEach(btn => {
+    btn.addEventListener("click", e => {
         e.preventDefault();
 
-        document.querySelectorAll('.buttons a').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
+        document.querySelectorAll(".buttons a").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
 
-        document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
-        const id = btn.dataset.section;
-        document.getElementById(id).classList.add('active');
+        document.querySelectorAll(".section").forEach(sec => sec.classList.remove("active"));
+        document.getElementById(btn.dataset.section).classList.add("active");
 
-        if (id === "instagram-section") loadInstagram();
+        if (btn.dataset.section === "instagram-section") loadInstagram();
     });
 });
 
-/* =========================
-   CHAT FUNCTIONS (REAL)
-========================= */
-const chatBox = document.getElementById("chat-messages");
-const chatInput = document.getElementById("chat-input");
+/* ===== SOCKET CHAT ===== */
+const socket = io("https://zion-backend.onrender.com");
+const ROOM = "zion-global";
+
+socket.emit("join_room", ROOM);
 
 function sendMessage() {
-    if (!chatInput.value.trim()) return;
+    const input = document.getElementById("chat-input");
+    if (!input.value.trim()) return;
 
-    socket.emit("chat-message", chatInput.value);
-    chatInput.value = "";
-}
-
-/* RECEIVE NEW MESSAGE */
-socket.on("chat-message", data => {
-    addLine(`> ${data.text}`);
-});
-
-/* RECEIVE CHAT HISTORY */
-socket.on("chat-history", messages => {
-    chatBox.innerHTML = "";
-    messages.forEach(msg => {
-        addLine(`> ${msg.text}`);
+    socket.emit("send_message", {
+        room: ROOM,
+        text: input.value
     });
-});
 
-/* TERMINAL STYLE LINE */
-function addLine(text) {
-    const line = document.createElement("div");
-    line.textContent = text;
-    chatBox.appendChild(line);
-    chatBox.scrollTop = chatBox.scrollHeight;
+    input.value = "";
 }
 
-/* =========================
-   INSTAGRAM
-========================= */
+socket.on("receive_message", data => {
+    const box = document.getElementById("chat-messages");
+    const line = document.createElement("div");
+    line.className = "chat-line";
+    line.textContent = `[${data.time}] ${data.text}`;
+    box.appendChild(line);
+    box.scrollTop = box.scrollHeight;
+});
+
+/* ===== INSTAGRAM ===== */
 function loadInstagram() {
-    const urls = [
+    const posts = [
         "https://www.instagram.com/p/DMAiPwwspDz/",
         "https://www.instagram.com/p/DNtr9Zx2CFL/",
         "https://www.instagram.com/p/DLnPGSrsCXC/",
@@ -69,14 +52,12 @@ function loadInstagram() {
     const grid = document.querySelector(".instagram-grid");
     grid.innerHTML = "";
 
-    urls.forEach(u => {
+    posts.forEach(url => {
         const div = document.createElement("div");
-        div.className = "instagram-post";
         div.innerHTML = `
-            <blockquote class="instagram-media"
-                data-instgrm-permalink="${u}">
-            </blockquote>
-        `;
+          <blockquote class="instagram-media"
+            data-instgrm-permalink="${url}">
+          </blockquote>`;
         grid.appendChild(div);
     });
 

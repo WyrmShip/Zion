@@ -20,18 +20,27 @@
 
 <div class="content-container">
 
-    <!-- HOME (EMPTY – ONLY BACKGROUND GIF) -->
- <div class="section active" id="home-section"></div>
- 
+    <!-- HOME -->
+    <div class="section active" id="home-section"></div>
+
     <!-- CHAT -->
     <div class="section" id="chat-section">
         <div class="chat-container">
-            <div class="chat-messages" id="chat-messages"></div>
+
+            <div class="chat-messages" id="chat-messages">
+                <div class="chat-line system">[ WYRM SHIP CHAT ]</div>
+                <div class="chat-line system">type and press SEND</div>
+            </div>
 
             <div class="chat-input">
-                <input type="text" id="chat-input" placeholder="Type message...">
-                <button onclick="sendMessage()">Send</button>
+                <input
+                    type="text"
+                    id="chat-input"
+                    placeholder="> type message..."
+                    autocomplete="off">
+                <button onclick="sendMessage()">SEND</button>
             </div>
+
         </div>
     </div>
 
@@ -50,7 +59,6 @@
 
 </div>
 
-<!-- FOOTER BUTTONS (KEPT LIKE YOU WANT) -->
 <footer class="buttons">
     <a href="#" data-section="chat-section">Chat</a>
     <a href="#" data-section="home-section" class="active">Home</a>
@@ -58,6 +66,7 @@
     <a href="#" data-section="video-section">Chill</a>
 </footer>
 
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
 <script src="fonc.js"></script>
 <script async src="//www.instagram.com/embed.js"></script>
 </body>
