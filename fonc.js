@@ -1,4 +1,11 @@
-// BUTTON NAVIGATION
+/* =========================
+   CONNECT TO CHAT SERVER
+========================= */
+const socket = io("https://zion-backend.onrender.com");
+
+/* =========================
+   BUTTON NAVIGATION
+========================= */
 document.querySelectorAll('.buttons a').forEach(btn => {
     btn.addEventListener('click', e => {
         e.preventDefault();
@@ -14,23 +21,43 @@ document.querySelectorAll('.buttons a').forEach(btn => {
     });
 });
 
-function sendMessage() {
-    const input = document.getElementById("chat-input");
-    if (!input.value.trim()) return;
+/* =========================
+   CHAT FUNCTIONS (REAL)
+========================= */
+const chatBox = document.getElementById("chat-messages");
+const chatInput = document.getElementById("chat-input");
 
-    addLine("> " + input.value);
-    input.value = "";
+function sendMessage() {
+    if (!chatInput.value.trim()) return;
+
+    socket.emit("chat-message", chatInput.value);
+    chatInput.value = "";
 }
 
+/* RECEIVE NEW MESSAGE */
+socket.on("chat-message", data => {
+    addLine(`> ${data.text}`);
+});
+
+/* RECEIVE CHAT HISTORY */
+socket.on("chat-history", messages => {
+    chatBox.innerHTML = "";
+    messages.forEach(msg => {
+        addLine(`> ${msg.text}`);
+    });
+});
+
+/* TERMINAL STYLE LINE */
 function addLine(text) {
-    const box = document.getElementById("chat-messages");
     const line = document.createElement("div");
     line.textContent = text;
-    box.appendChild(line);
-    box.scrollTop = box.scrollHeight;
+    chatBox.appendChild(line);
+    chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-// INSTAGRAM
+/* =========================
+   INSTAGRAM
+========================= */
 function loadInstagram() {
     const urls = [
         "https://www.instagram.com/p/DMAiPwwspDz/",
