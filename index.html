@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ZION</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="design.css">
+</head>
+
+<body>
+
+<header class="header">
+    <img src="https://i.ibb.co/q3tHL4vL/wyrm-studio.png" height="160">
+</header>
+
+<div class="content-container">
+
+    <!-- HOME (EMPTY – ONLY BACKGROUND GIF) -->
+ <div class="section active" id="home-section"></div>
+ 
+    <!-- CHAT -->
+    <div class="section" id="chat-section">
+        <div class="chat-container">
+            <div class="chat-messages" id="chat-messages"></div>
+
+            <div class="chat-input">
+                <input type="text" id="chat-input" placeholder="Type message...">
+                <button onclick="sendMessage()">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- VIDEO -->
+    <div class="section" id="video-section">
+        <iframe id="chill-video"
+            src="https://www.youtube.com/embed/LPpYmqb8ug4?autoplay=1&mute=1&loop=1&playlist=LPpYmqb8ug4"
+            allowfullscreen>
+        </iframe>
+    </div>
+
+    <!-- INSTAGRAM -->
+    <div class="section" id="instagram-section">
+        <div class="instagram-grid"></div>
+    </div>
+
+</div>
+
+<!-- FOOTER BUTTONS (KEPT LIKE YOU WANT) -->
+<footer class="buttons">
+    <a href="#" data-section="chat-section">Chat</a>
+    <a href="#" data-section="home-section" class="active">Home</a>
+    <a href="#" data-section="instagram-section">Archive</a>
+    <a href="#" data-section="video-section">Chill</a>
+</footer>
+
+<script src="fonc.js"></script>
+<script async src="//www.instagram.com/embed.js"></script>
+</body>
+</html>
