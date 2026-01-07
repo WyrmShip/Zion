@@ -8,6 +8,11 @@ import {
   off
 } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
 
+/* ================= NOTIFICATION PERMISSION ================= */
+if ("Notification" in window && Notification.permission !== "granted") {
+  Notification.requestPermission();
+}
+
 /* ================= USERNAME ================= */
 let username = localStorage.getItem("zion_username");
 
@@ -36,6 +41,8 @@ const db = getDatabase(app);
 const chatRef = ref(db, "zion-chat");
 
 /* ================= REALTIME RECEIVE ================= */
+let initialLoad = true;
+
 document.addEventListener("DOMContentLoaded", () => {
   const box = document.getElementById("chat-messages");
 
@@ -43,13 +50,30 @@ document.addEventListener("DOMContentLoaded", () => {
     const msg = snap.val();
     if (!msg || !box) return;
 
+    /* SHOW MESSAGE */
     const line = document.createElement("div");
     line.className = "chat-line";
     line.textContent = `[${msg.user}] > ${msg.text}`;
-
     box.appendChild(line);
     box.scrollTop = box.scrollHeight;
+
+    /* 🔔 NOTIFICATION (only after initial load) */
+    if (
+      !initialLoad &&
+      document.hidden &&
+      msg.user !== username &&
+      Notification.permission === "granted"
+    ) {
+      new Notification("New message", {
+        body: `${msg.user}: ${msg.text}`
+      });
+    }
   });
+
+  /* Stop initial-load spam */
+  setTimeout(() => {
+    initialLoad = false;
+  }, 1500);
 });
 
 /* ================= SEND MESSAGE ================= */
