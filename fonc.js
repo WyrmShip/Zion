@@ -7,7 +7,7 @@ import {
   onChildAdded
 } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
 
-/* ================= USER NAME SYSTEM ================= */
+/* ================= USERNAME ================= */
 let username = localStorage.getItem("zion_username");
 
 if (!username) {
@@ -18,7 +18,7 @@ if (!username) {
   localStorage.setItem("zion_username", username);
 }
 
-/* ================= FIREBASE CONFIG ================= */
+/* ================= CONFIG ================= */
 const firebaseConfig = {
   apiKey: "AIzaSyCAmtfnW4THCLj9dDGx77Z-MZoEESwyqk8",
   authDomain: "wyrm-chat.firebaseapp.com",
@@ -29,50 +29,15 @@ const firebaseConfig = {
   appId: "1:543614890114:web:03400887e27a640c01849b"
 };
 
-/* ================= INIT FIREBASE ================= */
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const chatRef = ref(db, "zion-chat");
 
-/* ================= NAVIGATION ================= */
-document.addEventListener("DOMContentLoaded", () => {
-  document.querySelectorAll(".buttons a").forEach(btn => {
-    btn.addEventListener("click", e => {
-      e.preventDefault();
-
-      document.querySelectorAll(".buttons a")
-        .forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-
-      document.querySelectorAll(".section")
-        .forEach(s => s.classList.remove("active"));
-      document.getElementById(btn.dataset.section).classList.add("active");
-
-      if (btn.dataset.section === "instagram-section") loadInstagram();
-    });
-  });
-});
-
-/* ================= CHAT ================= */
-function sendMessage() {
-  const input = document.getElementById("chat-input");
-  if (!input || !input.value.trim()) return;
-
-  push(chatRef, {
-    user: username,
-    text: input.value,
-    time: Date.now()
-  });
-
-  input.value = "";
-}
-
-/* make function usable from HTML button */
-window.sendMessage = sendMessage;
-
-/* ================= RECEIVE MESSAGES ================= */
+/* ================= REALTIME RECEIVE ================= */
 onChildAdded(chatRef, (snap) => {
   const msg = snap.val();
+  if (!msg) return;
+
   const box = document.getElementById("chat-messages");
   if (!box) return;
 
@@ -84,27 +49,42 @@ onChildAdded(chatRef, (snap) => {
   box.scrollTop = box.scrollHeight;
 });
 
-/* ================= INSTAGRAM ================= */
-function loadInstagram() {
-  const urls = [
-    "https://www.instagram.com/p/DMAiPwwspDz/",
-    "https://www.instagram.com/p/DNtr9Zx2CFL/",
-    "https://www.instagram.com/p/DLnPGSrsCXC/",
-    "https://www.instagram.com/p/DLNeAnlssHB/"
-  ];
+/* ================= SEND MESSAGE ================= */
+window.sendMessage = function () {
+  const input = document.getElementById("chat-input");
+  if (!input || !input.value.trim()) return;
 
-  const grid = document.querySelector(".instagram-grid");
-  if (!grid) return;
-  grid.innerHTML = "";
-
-  urls.forEach(u => {
-    const div = document.createElement("div");
-    div.className = "instagram-post";
-    div.innerHTML = `
-      <blockquote class="instagram-media" data-instgrm-permalink="${u}"></blockquote>
-    `;
-    grid.appendChild(div);
+  push(chatRef, {
+    user: username,
+    text: input.value.trim(),
+    time: Date.now()
   });
 
-  if (window.instgrm) window.instgrm.Embeds.process();
-}
+  input.value = "";
+};
+
+/* ================= ENTER KEY SUPPORT ================= */
+document.addEventListener("DOMContentLoaded", () => {
+  const input = document.getElementById("chat-input");
+  if (!input) return;
+
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      sendMessage();
+    }
+  });
+});
+
+/* ================= NAVIGATION ================= */
+document.querySelectorAll(".buttons a").forEach(btn => {
+  btn.addEventListener("click", e => {
+    e.preventDefault();
+
+    document.querySelectorAll(".buttons a").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+
+    document.querySelectorAll(".section").forEach(sec => sec.classList.remove("active"));
+    document.getElementById(btn.dataset.section).classList.add("active");
+  });
+});
