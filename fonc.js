@@ -36,18 +36,20 @@ const db = getDatabase(app);
 const chatRef = ref(db, "zion-chat");
 
 /* ================= REALTIME RECEIVE ================= */
-const box = document.getElementById("chat-messages");
+document.addEventListener("DOMContentLoaded", () => {
+  const box = document.getElementById("chat-messages");
 
-onChildAdded(chatRef, (snap) => {
-  const msg = snap.val();
-  if (!msg || !box) return;
+  onChildAdded(chatRef, (snap) => {
+    const msg = snap.val();
+    if (!msg || !box) return;
 
-  const line = document.createElement("div");
-  line.className = "chat-line";
-  line.textContent = `[${msg.user}] > ${msg.text}`;
+    const line = document.createElement("div");
+    line.className = "chat-line";
+    line.textContent = `[${msg.user}] > ${msg.text}`;
 
-  box.appendChild(line);
-  box.scrollTop = box.scrollHeight;
+    box.appendChild(line);
+    box.scrollTop = box.scrollHeight;
+  });
 });
 
 /* ================= SEND MESSAGE ================= */
