@@ -4,7 +4,8 @@ import {
   getDatabase,
   ref,
   push,
-  onChildAdded
+  onChildAdded,
+  off
 } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
 
 /* ================= USERNAME ================= */
@@ -29,24 +30,29 @@ const firebaseConfig = {
   appId: "1:543614890114:web:03400887e27a640c01849b"
 };
 
+/* ================= INIT ================= */
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const chatRef = ref(db, "zion-chat");
 
 /* ================= REALTIME RECEIVE ================= */
-onChildAdded(chatRef, (snap) => {
-  const msg = snap.val();
-  if (!msg) return;
-
+document.addEventListener("DOMContentLoaded", () => {
   const box = document.getElementById("chat-messages");
   if (!box) return;
 
-  const line = document.createElement("div");
-  line.className = "chat-line";
-  line.textContent = `[${msg.user}] > ${msg.text}`;
+  box.innerHTML = ""; // 🔥 clear once (important)
 
-  box.appendChild(line);
-  box.scrollTop = box.scrollHeight;
+  onChildAdded(chatRef, (snap) => {
+    const msg = snap.val();
+    if (!msg) return;
+
+    const line = document.createElement("div");
+    line.className = "chat-line";
+    line.textContent = `[${msg.user}] > ${msg.text}`;
+
+    box.appendChild(line);
+    box.scrollTop = box.scrollHeight;
+  });
 });
 
 /* ================= SEND MESSAGE ================= */
@@ -74,6 +80,11 @@ document.addEventListener("DOMContentLoaded", () => {
       sendMessage();
     }
   });
+});
+
+/* ================= CLEANUP ================= */
+window.addEventListener("beforeunload", () => {
+  off(chatRef);
 });
 
 /* ================= NAVIGATION ================= */
