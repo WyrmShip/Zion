@@ -120,3 +120,61 @@ document.querySelectorAll(".buttons a").forEach(btn => {
     document.getElementById(btn.dataset.section).classList.add("active");
   });
 });
+const logo = document.getElementById("logo");
+
+if (logo) {
+  logo.addEventListener("click", () => {
+    let overlay = document.getElementById("logo-overlay");
+
+    if (!overlay) {
+      overlay = document.createElement("div");
+      overlay.id = "logo-overlay";
+      document.body.appendChild(overlay);
+    }
+
+    // FORCE reflow so transition works
+    overlay.offsetHeight;
+
+    overlay.classList.add("show");
+
+    // stay 13s, then fade out
+    setTimeout(() => {
+      overlay.classList.remove("show");
+
+      setTimeout(() => {
+        overlay.remove();
+        location.href = "/";
+      }, 1200); // match CSS transition
+    }, 13000);
+  });
+}
+
+const archiveImages = [
+  "/assets/1.png",
+  "/assets/2.png",
+  "/assets/3.png",
+  "/assets/4.png",
+  "/assets/5.png",
+  "/assets/6.png",
+  "/assets/7.png",
+  "/assets/8.png"
+];
+
+function loadArchive() {
+  const grid = document.getElementById("archive-grid");
+  if (!grid) return;
+
+  grid.innerHTML = "";
+
+  const shuffled = archiveImages.sort(() => 0.5 - Math.random());
+  const selected = shuffled.slice(0, 4);
+
+  selected.forEach(src => {
+    const img = document.createElement("img");
+    img.src = src;
+    grid.appendChild(img);
+  });
+}
+
+loadArchive();
+

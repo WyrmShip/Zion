@@ -1,0 +1,44 @@
+body {
+  background-image: url('/assets/1d2f2d850b895315d7b4dbc889a56042.gif');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  margin: 0;
+  height: 100vh;
+  font-family: 'Courier New', monospace;
+  color: #00ff00;
+  overflow: hidden;
+}
+.matrix {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+}
+
+.terminal {
+  position: relative;
+  z-index: 1;
+  width: 70%;
+  max-width: 900px;
+  margin: auto;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 2px solid #00ff88;
+  box-shadow: 0 0 25px #00ff88;
+  padding: 15px;
+  background: rgba(0,0,0,0.85);
+}
+
+.terminal-output {
+  height: 300px;
+  overflow-y: auto;
+  margin-bottom: 10px;
+}
+
+#chat-input {
+  width: 100%;
+  background: black;
+  border: 1px solid #00ff88;
+  color: #00ff88;
+  padding: 10px;
+}

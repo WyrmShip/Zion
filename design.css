@@ -12,6 +12,23 @@ body {
     color: #00ff88;
     font-family: "Courier New", monospace;
 }
+#logo-overlay {
+  position: fixed;
+  inset: 0;
+  background: url("assets/dc70547297938040b3194ff984e21977-ezgif.com-video-to-gif-converter.gif") center / cover no-repeat black;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 9999;
+  transition: opacity 1.2s ease-in-out;
+}
+
+/* when visible */
+#logo-overlay.show {
+  opacity: 1;
+  pointer-events: all;
+}
+
+
 
 /* HEADER */
 .header {
@@ -90,16 +107,25 @@ iframe {
     height: 420px;
     border: none;
 }
-
-/* INSTAGRAM */
-.instagram-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
+/*tsawir*/
+.instagram-grid img,
+.instagram-grid iframe {
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  border-radius: 0;
 }
 
-.instagram-grid iframe {
-    width: 100%;
+.instagram-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  justify-items: center;
+}
+
+.instagram-grid img {
+  max-width: 90%;
+  height: auto;
 }
 
 /* BUTTONS */
